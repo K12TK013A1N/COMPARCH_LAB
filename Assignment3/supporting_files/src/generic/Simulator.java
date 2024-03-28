@@ -39,15 +39,16 @@ public class Simulator {
 			DataInputStream dataStream = new DataInputStream(inputStream);
 			if(dataStream.available()>0)
 			{
-				int fourBit = dataStream.readInt();
-				System.out.println(fourBit);
-				processor.getRegisterFile().setProgramCounter(fourBit);
+				int fourByte = dataStream.readInt();
+				System.out.println(fourByte);
+				processor.getRegisterFile().setProgramCounter(fourByte);
 			}
 			int address = 0;
 			while(dataStream.available()>0){
-				int fourBit = dataStream.readInt();
-				// System.out.println(fourBit);
-				processor.getMainMemory().setWord(address, fourBit);
+				int fourByte = dataStream.readInt();
+				System.out.println(fourByte);
+				processor.getMainMemory().setWord(address, fourByte);
+				address++;
 			}
 			processor.getRegisterFile().setValue(0, 0);
 			processor.getRegisterFile().setValue(1, 65535);
