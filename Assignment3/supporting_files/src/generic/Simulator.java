@@ -1,5 +1,10 @@
 package generic;
 
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import processor.Clock;
 import processor.Processor;
 
@@ -28,6 +33,29 @@ public class Simulator {
 		 *     x1 = 65535
 		 *     x2 = 65535
 		 */
+		// load program into memory.
+		try{
+			InputStream inputStream = new FileInputStream(assemblyProgramFile);
+			DataInputStream dataStream = new DataInputStream(inputStream);
+			if(dataStream.available()>0)
+			{
+				int fourBit = dataStream.readInt();
+				System.out.println(fourBit);
+				processor.getRegisterFile().setProgramCounter(fourBit);
+			}
+			int address = 0;
+			while(dataStream.available()>0){
+				int fourBit = dataStream.readInt();
+				// System.out.println(fourBit);
+				processor.getMainMemory().setWord(address, fourBit);
+			}
+			processor.getRegisterFile().setValue(0, 0);
+			processor.getRegisterFile().setValue(1, 65535);
+			processor.getRegisterFile().setValue(2, 65535);
+			dataStream.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
 	}
 	
 	public static void simulate()
