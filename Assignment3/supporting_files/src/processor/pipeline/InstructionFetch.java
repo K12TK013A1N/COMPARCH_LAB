@@ -23,7 +23,11 @@ public class InstructionFetch {
 		{
 			int currentPC = containingProcessor.getRegisterFile().getProgramCounter();
 			int newInstruction = containingProcessor.getMainMemory().getWord(currentPC);
-			IF_OF_Latch.setInstruction(newInstruction);
+			String newBinaryInstruction = Integer.toBinaryString(newInstruction);
+			// System.out.println(newBinaryInstruction.length());
+			newBinaryInstruction = String.format("%32s", newBinaryInstruction).replace(' ', '0');
+			// System.out.println(newBinaryInstruction.length());
+			IF_OF_Latch.setInstruction(newBinaryInstruction);
 			containingProcessor.getRegisterFile().setProgramCounter(currentPC + 1);
 			
 			IF_EnableLatch.setIF_enable(false);
