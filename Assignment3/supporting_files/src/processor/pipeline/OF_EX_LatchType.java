@@ -8,6 +8,7 @@ public class OF_EX_LatchType {
 	int rd;
 	int immediate;
 	int branchTarget;
+	String instruction;
 	
 	public OF_EX_LatchType()
 	{
@@ -20,6 +21,14 @@ public class OF_EX_LatchType {
 
 	public void setEX_enable(boolean eX_enable) {
 		EX_enable = eX_enable;
+	}
+
+	public String getInstruction(){
+		return instruction;
+	}
+
+	public void setInstruction(String Instruction){
+		instruction = Instruction;
 	}
 
 	public int getRs1(){
@@ -54,11 +63,11 @@ public class OF_EX_LatchType {
 		immediate = imm;
 	}
 
-	public int getBranchTarget(){
+	public int getOffset(){
 		return branchTarget;
 	}
 
-	public void setBranchTarget(int brnchT){
+	public void setOffset(int brnchT){
 		branchTarget = brnchT;
 	}
 
