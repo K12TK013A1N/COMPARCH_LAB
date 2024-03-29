@@ -1,5 +1,7 @@
 package processor.pipeline;
 
+import generic.Simulator;
+
 // import java.util.HashMap;
 
 import generic.Instruction.OperationType;
@@ -53,11 +55,11 @@ public class OperandFetch {
 			// System.out.println(binaryInstruction);
 			String opCode = binaryInstruction.substring(0, 5);
 			OperationType operation = OperationType.values()[Integer.parseInt(opCode, 2)];
-			int immediate;
-			int rs1;
-			int rs2;
-			int rd;
-			int branchTarget;
+			int immediate=0;
+			int rs1=0;
+			int rs2=0;
+			int rd=0;
+			int offset;
 			switch(operation){
 				case add:
 				case sub:
@@ -101,26 +103,39 @@ public class OperandFetch {
 				case bgt:
 				case blt:
 				case bne:
-					rs1 = Integer.parseInt(binaryInstruction.substring(5, 10));
-					rd = Integer.parseInt(binaryInstruction.substring(10, 15));
+					rs1 = Integer.parseInt(binaryInstruction.substring(5, 10),2);
+					rd = Integer.parseInt(binaryInstruction.substring(10, 15),2);
 					if(binaryInstruction.substring(15, 16).equals("1")){
-						branchTarget = -1*Integer.parseInt(twoComplement(binaryInstruction.substring(15, 32)));
-						OF_EX_Latch.setBranchTarget(branchTarget);
+						offset = -1*Integer.parseInt(twoComplement(binaryInstruction.substring(15, 32)),2);
+						OF_EX_Latch.setOffset(offset);
+						OF_EX_Latch.setRs1(rs1);
+						OF_EX_Latch.setRd(rd);
 					}else{
-						branchTarget = Integer.parseInt(binaryInstruction.substring(15, 32));
-						OF_EX_Latch.setBranchTarget(branchTarget);
+						offset = Integer.parseInt(binaryInstruction.substring(15, 32),2);
+						OF_EX_Latch.setOffset(offset);
+						OF_EX_Latch.setRs1(rs1);
+						OF_EX_Latch.setRd(rd);
 					}
 					break;
 				case jmp:
-					rd = Integer.parseInt(binaryInstruction.substring(5, 10));
-					branchTarget = Integer.parseInt(binaryInstruction.substring(10, 32));
+					rd = Integer.parseInt(binaryInstruction.substring(5, 10),2);
+					if(binaryInstruction.substring(10, 11).equals("1")){
+						offset = -1*Integer.parseInt(twoComplement(binaryInstruction.substring(10, 32)),2);
+					}else{
+						offset = Integer.parseInt(twoComplement(binaryInstruction.substring(10, 32)),2);
+					}
 					OF_EX_Latch.setRd(rd);
-					OF_EX_Latch.setBranchTarget(branchTarget);
+					OF_EX_Latch.setOffset(offset);
 					break;
 				case end:
+					Simulator.setSimulationComplete(true);
 					break;
 			}
-
+			System.out.println("rs1 "+ rs1);
+			System.out.println("rs2 "+rs2);
+			System.out.println("rd "+rd);
+			System.out.println("imme "+immediate);
+			OF_EX_Latch.setInstruction(binaryInstruction);
 			IF_OF_Latch.setOF_enable(false);
 			OF_EX_Latch.setEX_enable(true);
 		}
