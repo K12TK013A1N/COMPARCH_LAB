@@ -19,17 +19,26 @@ public class InstructionFetch {
 	
 	public void performIF()
 	{
+		int CurrentPC = 0;
 		if(IF_EnableLatch.isIF_enable())
 		{
-			int currentPC = containingProcessor.getRegisterFile().getProgramCounter();
-			int newInstruction = containingProcessor.getMainMemory().getWord(currentPC);
+			if(EX_IF_Latch.get_If_enable()){
+				CurrentPC = EX_IF_Latch.get_BPC();
+				EX_IF_Latch.set_If_enable(false);
+				System.out.println("hello i ma in if_ex");
+			}
+			else{
+			CurrentPC = containingProcessor.getRegisterFile().getProgramCounter();
+			}
+			int newInstruction = containingProcessor.getMainMemory().getWord(CurrentPC);
 			String newBinaryInstruction = Integer.toBinaryString(newInstruction);
 			// System.out.println(newBinaryInstruction.length());
 			newBinaryInstruction = String.format("%32s", newBinaryInstruction).replace(' ', '0');
 			// System.out.println(newBinaryInstruction.length());
 			IF_OF_Latch.setInstruction(newBinaryInstruction);
-			containingProcessor.getRegisterFile().setProgramCounter(currentPC + 1);
-			
+			containingProcessor.getRegisterFile().setProgramCounter(CurrentPC + 1);
+			System.out.println("pc "+ CurrentPC);
+			System.out.println("inst "+ newBinaryInstruction);
 			IF_EnableLatch.setIF_enable(false);
 			IF_OF_Latch.setOF_enable(true);
 		}
