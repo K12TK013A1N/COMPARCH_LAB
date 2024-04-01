@@ -1,0 +1,3 @@
+Number of cycles taken = 124
+Number of OF stage needed to stall = 27
+Number of times an instruction on a wrong branch path entered the pipeline = 16
